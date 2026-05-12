@@ -11,11 +11,13 @@ import java.util.Scanner;
 public class Stage1 extends Application {
     private Territory territory;
     private TerritoryView territoryView;
+    private File configFileRef;
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
         Scanner configFile= openConfig(primaryStage);
         territory = new Territory();
-        territoryView = new TerritoryView(territory, configFile.next());
+        String imageUri = new File(configFileRef.getParent(), configFile.next()).toURI().toString();
+        territoryView = new TerritoryView(territory, imageUri);
         configFile.nextDouble();  // skip timeStep
         BorderPane scenePane = new BorderPane();
         scenePane.setTop(createMenuBar());
@@ -30,8 +32,8 @@ public class Stage1 extends Application {
         Scanner configFile;
         do {
             try {
-                File file = fileChooser(stage);
-                configFile = new Scanner(file);
+                configFileRef = fileChooser(stage);
+                configFile = new Scanner(configFileRef);
             } catch (FileNotFoundException e) {
                 configFile=null;
             }

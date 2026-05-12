@@ -9,7 +9,16 @@ public class EloTelTagView extends Group {
     private final Text label;
 
     public EloTelTagView(EloTelTag tag) {
-/* Take a look at CellularView constructor */
+        this.tag = tag;
+        double radius = 6;
+        circle = new Circle(radius);
+        circle.setFill(Color.GREEN);
+        circle.centerXProperty().bind(tag.xProperty());
+        circle.centerYProperty().bind(tag.yProperty());
+        label = new Text(tag.getName());
+        label.xProperty().bind(tag.xProperty().add(radius + 4));
+        label.yProperty().bind(tag.yProperty());
+        getChildren().addAll(circle, label);
     }
 
 }

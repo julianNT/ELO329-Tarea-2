@@ -9,19 +9,19 @@ public class TerritoryView extends ScrollPane {
     private Territory territory;
     private Pane pane;  // to place each piece of equipment
     public static double WIDTH;
-// ¿...?
+    public static double HEIGHT;
     public TerritoryView(Territory territory, String imageName) {
         this.territory = territory;
         Image image = new Image("file:"+imageName);
         ImageView mapView = new ImageView(image);
         WIDTH = image.getWidth();
-// ¿...?
+        HEIGHT = image.getHeight();
         pane = new Pane();
         StackPane territoryPane = new StackPane();
-        territoryPane.getChildren().addAll(/*¿...?*/);
-        // ¿....?
+        territoryPane.getChildren().addAll(mapView, pane);
+        setContent(territoryPane);
     }
     public void add(Node equipo) {
-      // ¿ .... ?
+        pane.getChildren().add(equipo);
     }
 }

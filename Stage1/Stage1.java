@@ -48,7 +48,8 @@ public class Stage1 extends Application {
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu simulMenu = new Menu("Simulation");
-        //. ¿....?
+        simulMenu.getItems().addAll(new MenuItem("Play"), new MenuItem("Pause"));
+        menuBar.getMenus().add(simulMenu);
         return menuBar;
     }
     private void setupSimulator(Scanner in) {  // create objects from file
@@ -83,7 +84,11 @@ public class Stage1 extends Application {
 // Skip all
         float x, y, r, theta, dt;
         String tagName = in.next();
-// ¿......?
+        x = in.nextFloat();
+        y = in.nextFloat();
+        r = in.nextFloat();
+        theta = in.nextFloat();
+        dt = in.nextFloat();
     }
     /**
      * The main method is only needed for the IDE with limited JavaFX support.

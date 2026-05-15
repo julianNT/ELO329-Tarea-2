@@ -11,16 +11,19 @@ public class Equipo {
         ownerName = owner;
         x.set(_x);
         y.set(_y);
-  /* ¿...?  */
+        this.r = r;
+        this.theta = theta;
+        this.dtheta = dtheta;
     }
 
     public void move(double dt) {
         theta += (Math.random()-0.5)*dtheta;
-/*.  ¿...?*/
+        x.set(x.get() + r * dt * Math.cos(theta));
+        y.set(y.get() + r * dt * Math.sin(theta));
         if (x.get()<0 || x.get()>TerritoryView.WIDTH )
-// ¿...?
+            theta = Math.PI - theta;
         if (y.get()<0 || y.get()>TerritoryView.HEIGHT )
-// ¿...?
+            theta = -theta;
     }
 
     public DoubleProperty xProperty() { return x; }

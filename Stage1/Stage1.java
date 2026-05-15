@@ -11,11 +11,13 @@ import java.util.Scanner;
 public class Stage1 extends Application {
     private Territory territory;
     private TerritoryView territoryView;
+    private File configFileRef;
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
         Scanner configFile= openConfig(primaryStage);
         territory = new Territory();
-        territoryView = new TerritoryView(territory, configFile.next());
+        String imageUri = new File(configFileRef.getParent(), configFile.next()).toURI().toString();
+        territoryView = new TerritoryView(territory, imageUri);
         configFile.nextDouble();  // skip timeStep
         BorderPane scenePane = new BorderPane();
         scenePane.setTop(createMenuBar());
@@ -30,8 +32,8 @@ public class Stage1 extends Application {
         Scanner configFile;
         do {
             try {
-                File file = fileChooser(stage);
-                configFile = new Scanner(file);
+                configFileRef = fileChooser(stage);
+                configFile = new Scanner(configFileRef);
             } catch (FileNotFoundException e) {
                 configFile=null;
             }
@@ -48,7 +50,8 @@ public class Stage1 extends Application {
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu simulMenu = new Menu("Simulation");
-        //. ¿....?
+        simulMenu.getItems().addAll(new MenuItem("Play"), new MenuItem("Pause"));
+        menuBar.getMenus().add(simulMenu);
         return menuBar;
     }
     private void setupSimulator(Scanner in) {  // create objects from file
@@ -83,7 +86,11 @@ public class Stage1 extends Application {
 // Skip all
         float x, y, r, theta, dt;
         String tagName = in.next();
-// ¿......?
+        x = in.nextFloat();
+        y = in.nextFloat();
+        r = in.nextFloat();
+        theta = in.nextFloat();
+        dt = in.nextFloat();
     }
     /**
      * The main method is only needed for the IDE with limited JavaFX support.

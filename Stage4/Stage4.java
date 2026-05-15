@@ -1,8 +1,9 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -10,64 +11,45 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-
-public class Stage3 extends Application {
+public class Stage4 extends Application {
     private Territory territory;
+    public ETNube nube;
     private TerritoryView territoryView;
     private double timeStep;
-    private File configFileRef;
-    private final ETNube nube = new ETNube();
-    private final List<EloTelTag> tags = new ArrayList<>();
-    private final List<Tablet> tablets = new ArrayList<>();
+    private Pane pane;
+    private int contador = 0;
+
+    private File configDir;
 
     @Override
     public void start(Stage primaryStage) {
         Scanner configFile = openConfig(primaryStage);
+        nube = new ETNube();
         territory = new Territory();
-        String imageUri = new File(configFileRef.getParent(), configFile.next()).toURI().toString();
-        territoryView = new TerritoryView(territory, imageUri);
+        String imageName = configDir.getAbsolutePath() + File.separator + configFile.next();
+        territoryView = new TerritoryView(territory, imageName);
         timeStep = configFile.nextDouble();
         BorderPane scenePane = new BorderPane();
+        pane = territoryView.getPane();
+        nube.setPane(territoryView.getPane());
         scenePane.setTop(createMenuBar());
         scenePane.setCenter(territoryView);
         setupSimulator(configFile);
-        setupScanTimelines();
         Scene scene = new Scene(scenePane, 1000, 700);
-        primaryStage.setTitle("EloTelTag Simulation: Stage 3");
+        primaryStage.setTitle("EloTelTag Simulation: Stage 4");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    private void setupScanTimelines() {
-        Timeline tagScan = new Timeline(
-            new KeyFrame(Duration.seconds(4), e -> {
-                List<Cellular> cellulars = territory.getCellulars();
-                for (EloTelTag tag : tags) tag.scan(cellulars, nube);
-            })
-        );
-        tagScan.setCycleCount(Timeline.INDEFINITE);
-        tagScan.play();
-
-        Timeline tabletScan = new Timeline(
-            new KeyFrame(Duration.seconds(5), e -> {
-                List<Cellular> cellulars = territory.getCellulars();
-                for (Tablet tablet : tablets) tablet.scan(cellulars, nube);
-            })
-        );
-        tabletScan.setCycleCount(Timeline.INDEFINITE);
-        tabletScan.play();
     }
 
     private Scanner openConfig(Stage stage) {
         Scanner configFile;
         do {
             try {
-                configFileRef = fileChooser(stage);
-                configFile = new Scanner(configFileRef);
+                File file = fileChooser(stage);
+                configDir = file.getParentFile();
+                configFile = new Scanner(file);
             } catch (FileNotFoundException e) {
                 configFile = null;
             }
@@ -88,10 +70,43 @@ public class Stage3 extends Application {
         Menu simulMenu = new Menu("Simulation");
         MenuItem playMenuItem = new MenuItem("Play");
         MenuItem pauseMenuItem = new MenuItem("Pause");
+
         simulMenu.getItems().addAll(playMenuItem, pauseMenuItem);
         menuBar.getMenus().add(simulMenu);
+
+        int etInterval = (int) Math.round(4.0 / timeStep);
+        int tabletInterval = (int) Math.round(5.0 / timeStep);
+
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(1000 * timeStep), e -> territory.moveAll(timeStep))
+                new KeyFrame(
+                        Duration.millis(1000 * timeStep),
+                        e -> {
+                            territory.moveAll(timeStep);
+                            contador++;
+
+                            if (contador % etInterval == 0) {
+                                for (Equipo eq : territory.equipment) {
+                                    if (eq instanceof EloTelTag) {
+                                        spawnRadar(eq.x.get(), eq.y.get());
+                                    }
+                                }
+                                territory.actualizarNube(nube);
+                            }
+
+                            if (contador % tabletInterval == 0) {
+                                for (Equipo eq : territory.equipment) {
+                                    if (eq instanceof Tablet) {
+                                        spawnRadar(eq.x.get(), eq.y.get());
+                                    }
+                                }
+                                territory.actualizarNube(nube);
+                            }
+
+                            for (ETNube.Data dato : nube.cloudData) {
+                                System.out.println(dato.ownerName + "    " + dato.equipmentName + "       " + dato.location);
+                            }
+                        }
+                )
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         playMenuItem.setOnAction(e -> timeline.play());
@@ -107,6 +122,7 @@ public class Stage3 extends Application {
 
     private void setupPersonEquipment(Scanner in) {
         double x, y, r, theta, dt;
+
         String personName = in.next();
         int tagNumber = in.nextInt();
         boolean isThereTablet = in.nextInt() == 1;
@@ -115,8 +131,8 @@ public class Stage3 extends Application {
         r = in.nextFloat();
         theta = Math.toRadians(in.nextFloat());
         dt = Math.toRadians(in.nextFloat());
-        Cellular cellular = new Cellular(personName, x, y, r, theta, dt);
-        CellularView cView = new CellularView(cellular, nube);
+        Cellular cellular = new Cellular(personName, x, y, r, theta, dt, nube);
+        CellularView cView = new CellularView(cellular);
         territory.addEquipment(cellular);
         territoryView.add(cView);
         for (int j = 0; j < tagNumber; j++)
@@ -128,10 +144,9 @@ public class Stage3 extends Application {
             theta = Math.toRadians(in.nextFloat());
             dt = Math.toRadians(in.nextFloat());
             Tablet tablet = new Tablet(personName, x, y, r, theta, dt);
-            TabletView tabletView = new TabletView(tablet, nube);
+            TabletView tView = new TabletView(tablet, nube);
             territory.addEquipment(tablet);
-            territoryView.add(tabletView);
-            tablets.add(tablet);
+            territoryView.add(tView);
         }
     }
 
@@ -147,7 +162,22 @@ public class Stage3 extends Application {
         EloTelTagView tagView = new EloTelTagView(tag);
         territory.addEquipment(tag);
         territoryView.add(tagView);
-        tags.add(tag);
+    }
+
+    public void spawnRadar(double x, double y) {
+        if (pane == null) return;
+        Circle c = new Circle(x, y, 5);
+        c.setStroke(Color.LIMEGREEN);
+        c.setFill(null);
+        pane.getChildren().add(c);
+        ScaleTransition st = new ScaleTransition(Duration.millis(1000), c);
+        st.setToX(10);
+        st.setToY(10);
+        FadeTransition ft = new FadeTransition(Duration.millis(1000), c);
+        ft.setToValue(0);
+        ParallelTransition pt = new ParallelTransition(st, ft);
+        pt.setOnFinished(e -> pane.getChildren().remove(c));
+        pt.play();
     }
 
     public static void main(String[] args) {

@@ -1,49 +1,49 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
+/**
+ * Vista JavaFX de un {@link EloTelTag} en el territorio.
+ * <p>
+ * Muestra el tag como un círculo verde de radio 6 px con el nombre del tag
+ * a su derecha. La posición del círculo y la etiqueta se mantienen sincronizadas
+ * con el modelo mediante bindings sobre las propiedades {@code xProperty()} e
+ * {@code yProperty()} del {@link EloTelTag}.
+ * </p>
+ *
+ * @see EloTelTag
+ * @see Equipo
+ */
 public class EloTelTagView extends Group {
+
+    /** Modelo del tag que esta vista representa. */
     private final EloTelTag tag;
+
+    /** Círculo que representa visualmente el tag. */
     private final Circle circle;
+
+    /** Etiqueta con el nombre del tag. */
     private final Text label;
 
+    /**
+     * Crea la vista para el {@link EloTelTag} dado y configura los bindings de posición.
+     *
+     * @param tag el modelo {@link EloTelTag} a visualizar
+     */
     public EloTelTagView(EloTelTag tag) {
+
         this.tag = tag;
-        double radius = 6;
-        circle = new Circle(radius);
-        circle.setFill(Color.GREEN);
+
+        circle = new Circle(6);
+        circle.setFill(Color.LIMEGREEN);
         circle.centerXProperty().bind(tag.xProperty());
         circle.centerYProperty().bind(tag.yProperty());
+
         label = new Text(tag.getName());
-        label.xProperty().bind(tag.xProperty().add(radius + 4));
+        label.xProperty().bind(tag.xProperty().add(10));
         label.yProperty().bind(tag.yProperty());
 
-        Circle radar = new Circle(0);
-        radar.setFill(Color.TRANSPARENT);
-        radar.setStroke(Color.GREEN);
-        radar.centerXProperty().bind(tag.xProperty());
-        radar.centerYProperty().bind(tag.yProperty());
-
-        Timeline radarAnim = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(radar.radiusProperty(), 0),
-                new KeyValue(radar.opacityProperty(), 1)),
-            new KeyFrame(Duration.seconds(1),
-                new KeyValue(radar.radiusProperty(), 50),
-                new KeyValue(radar.opacityProperty(), 0))
-        );
-
-        Timeline trigger = new Timeline(
-            new KeyFrame(Duration.seconds(4), e -> radarAnim.playFromStart())
-        );
-        trigger.setCycleCount(Timeline.INDEFINITE);
-        trigger.play();
-
-        getChildren().addAll(radar, circle, label);
+        getChildren().addAll(circle, label);
     }
 }

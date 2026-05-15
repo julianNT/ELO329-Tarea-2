@@ -1,8 +1,5 @@
 package com.example.t2stage3v2;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -186,7 +183,6 @@ public class Stage3 extends Application {
     }
 
 
-
     public void spawnRadar(double x, double y) {
 
         if (pane == null) return;
@@ -197,17 +193,17 @@ public class Stage3 extends Application {
 
         pane.getChildren().add(c);
 
-        ScaleTransition st = new ScaleTransition(Duration.millis(500), c);
+        ScaleTransition st = new ScaleTransition(Duration.millis(1000), c);
         st.setToX(10);
         st.setToY(10);
 
-        FadeTransition ft = new FadeTransition(Duration.millis(500), c);
+        FadeTransition ft = new FadeTransition(Duration.millis(1000), c);
         ft.setToValue(0);
 
-        st.play();
-        ft.play();
+        ParallelTransition pt = new ParallelTransition(st, ft);
 
-        ft.setOnFinished(e -> pane.getChildren().remove(c));
+        pt.setOnFinished(e -> pane.getChildren().remove(c));
+        pt.play();
     }
     /**
      * The main method is only needed for the IDE with limited JavaFX support.

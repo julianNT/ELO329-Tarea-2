@@ -90,12 +90,6 @@ public class ETNube {
         public String ownerName, equipmentName;
     }
 
-    private Pane pane;
-
-    public void setPane(Pane pane) {
-        this.pane = pane;
-    }
-
     public void spawnRadar(double x, double y) {
 
         if (pane == null) return;

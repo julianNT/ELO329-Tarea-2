@@ -85,3 +85,14 @@ Se presentan carpetas la cuales contienen los archivos correspondientes a cada e
 - TerritoryView.java
 - config.txt: archivo de entrada
 - Placeres.jpg: imagen del mapa
+
+
+### 4. Extra-crédito: GFindMy
+
+Se ha implementado con éxito la funcionalidad de extra-crédito **GFindMy** en la Etapa 4. 
+
+Para evaluarla:
+1. Ejecute la simulación de la Etapa 4 (`make run`).
+2. Haga clic sobre cualquiera de los celulares en el mapa.
+3. En el menú emergente, seleccione la opción `GFindMy`.
+4. Se abrirá una ventana secundaria con el mapa del territorio y la representación gráfica en tiempo real de los bienes registrados por el dueño de ese celular. Esta interfaz gráfica consulta la base de datos `ETNube` y se actualiza automáticamente cada 1 segundo.

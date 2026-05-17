@@ -16,9 +16,9 @@ make run
 
 ### 2. Generar documentación con Javadoc
 
-Para generar la página web interactiva con la documentación, abre la terminal en el directorio del Stage correspondiente (idealmente en Stage4, que contiene la versión final de las clases) y ejecuta el siguiente comando:
+Para generar la página web interactiva con la documentación, abre la terminal en el directorio del Stage correspondiente (idealmente en Stage4, que contiene la versión final de las clases) y ejecuta el siguiente comando del makefile:
 
-javadoc -d doc *.java
+make doc
 
 Este proceso generará automáticamente una carpeta llamada doc. Para consultar la documentación, simplemente abre el archivo de índice en tu navegador de preferencia. Desde la terminal puedes lanzarlo directamente con:
 

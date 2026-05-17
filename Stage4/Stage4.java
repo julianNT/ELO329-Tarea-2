@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Locale;
 
 public class Stage4 extends Application {
     private Territory territory;
@@ -33,7 +34,6 @@ public class Stage4 extends Application {
         timeStep = configFile.nextDouble();
         BorderPane scenePane = new BorderPane();
         pane = territoryView.getPane();
-        nube.setPane(territoryView.getPane());
         scenePane.setTop(createMenuBar());
         scenePane.setCenter(territoryView);
         setupSimulator(configFile);
@@ -50,6 +50,7 @@ public class Stage4 extends Application {
                 File file = fileChooser(stage);
                 configDir = file.getParentFile();
                 configFile = new Scanner(file);
+		configFile.useLocale(Locale.US);
             } catch (FileNotFoundException e) {
                 configFile = null;
             }

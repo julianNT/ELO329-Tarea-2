@@ -89,27 +89,4 @@ public class ETNube {
         public Point2D location;
         public String ownerName, equipmentName;
     }
-
-    public void spawnRadar(double x, double y) {
-
-        if (pane == null) return;
-
-        Circle c = new Circle(x, y, 5);
-        c.setStroke(Color.LIMEGREEN);
-        c.setFill(null);
-
-        pane.getChildren().add(c);
-
-        ScaleTransition st = new ScaleTransition(Duration.millis(500), c);
-        st.setToX(10);
-        st.setToY(10);
-
-        FadeTransition ft = new FadeTransition(Duration.millis(500), c);
-        ft.setToValue(0);
-
-        st.play();
-        ft.play();
-
-        ft.setOnFinished(e -> pane.getChildren().remove(c));
-    }
 }

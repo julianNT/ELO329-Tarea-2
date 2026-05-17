@@ -12,6 +12,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.shape.Circle;
+import java.io.File;
 
 public class CellularView extends Group {
     private final Cellular cellular;
@@ -41,7 +47,8 @@ public class CellularView extends Group {
         rect.setMouseTransparent(true);
         label.setMouseTransparent(true);
         MenuItem findMy = new MenuItem("FindMy");
-        menu.getItems().add(findMy);
+	MenuItem gFindMy = new MenuItem("GFindMy");
+        menu.getItems().addAll(findMy, gFindMy);
 
         this.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
@@ -96,6 +103,67 @@ public class CellularView extends Group {
             popup.setTitle("FindMy");
             popup.setScene(scene);
             popup.show();
+        });
+	gFindMy.setOnAction(e -> {
+            Stage gPopup = new Stage();
+            gPopup.setTitle("GFindMy: " + cellular.getOwnerName());
+            
+            // Cargar la imagen de fondo de la simulación de forma estática
+            Image bgImage = new Image(new File("Placeres.jpg").toURI().toString());
+            ImageView bgView = new ImageView(bgImage);
+            
+            // Capa para renderizar los dispositivos de forma dinámica
+            Pane layerEquipos = new Pane();
+            Pane rootPane = new Pane(bgView, layerEquipos);
+
+            // Tarea síncrona de refresco gráfico
+            Runnable gRefresh = () -> {
+                layerEquipos.getChildren().clear(); // Limpiar solo los iconos viejos
+                String owner = cellular.getOwnerName();
+                
+                // Buscar en la base de datos centralizada de la nube
+                for (ETNube.Data d : nube.cloudData) {
+                    if (d.ownerName.equals(owner)) {
+                        Group icon = new Group();
+                        
+                        if (d.equipmentName.equals("cellular")) {
+                            Rectangle cRect = new Rectangle(12, 24, Color.DODGERBLUE);
+                            cRect.setX(d.location.getX() - 6);
+                            cRect.setY(d.location.getY() - 12);
+                            icon.getChildren().add(cRect);
+                            
+                        } else if (d.equipmentName.equals("tablet")) {
+                            Rectangle tRect = new Rectangle(16, 26, Color.ORANGE);
+                            tRect.setX(d.location.getX() - 8);
+                            tRect.setY(d.location.getY() - 13);
+                            icon.getChildren().add(tRect);
+                            
+                        } else {
+                            // Representación para los EloTelTags de este dueño
+                            Circle tagCircle = new Circle(d.location.getX(), d.location.getY(), 6, Color.LIMEGREEN);
+                            Text tagLabel = new Text(d.location.getX() + 10, d.location.getY(), d.equipmentName);
+                            icon.getChildren().addAll(tagCircle, tagLabel);
+                        }
+                        layerEquipos.getChildren().add(icon);
+                    }
+                }
+            };
+
+            // Ejecución inicial inmediata antes del bucle periódico
+            gRefresh.run();
+            
+            // Configurar Timeline para actualizar la ventana cada 1 segundo
+            Timeline gTimeline = new Timeline(new KeyFrame(Duration.seconds(1), ev -> gRefresh.run()));
+            gTimeline.setCycleCount(Timeline.INDEFINITE);
+            gTimeline.play();
+            
+            // Detener el reloj al cerrar la ventana emergente para evitar Memory Leaks
+            gPopup.setOnHidden(ev -> gTimeline.stop());
+
+            ScrollPane scroll = new ScrollPane(rootPane);
+            Scene gScene = new Scene(scroll, 600, 400);
+            gPopup.setScene(gScene);
+            gPopup.show();
         });
 
         this.setPickOnBounds(true);

@@ -4,7 +4,7 @@ JFLAGS = --module-path $(JAVAFX_PATH) --add-modules $(MODULES)
 
 run:
 	javac $(JFLAGS) *.java
-	java $(JFLAGS) Stage4
+	java $(JFLAGS) Stage3
 
 clean:
 	rm -f *.class

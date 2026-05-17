@@ -7,7 +7,22 @@ Se simula graficamente la interacción entre dispositivos EloTelTags, celulares 
 
 ### 1. Compilación y ejecución
 
+El proyecto está diseñado para compilarse y ejecutarse de forma automatizada desde la terminal. Cada etapa de desarrollo (Stage) cuenta con su propio archivo `Makefile`.
+
+Para ejecutar el simulador, abre la terminal, ingresa al directorio de la etapa que deseas evaluar y utiliza el comando de construcción. Por ejemplo, para la última etapa:
+
+cd Stage4
+make run
+
 ### 2. Generar documentación con Javadoc
+
+Para generar la página web interactiva con la documentación, abre la terminal en el directorio del Stage correspondiente (idealmente en Stage4, que contiene la versión final de las clases) y ejecuta el siguiente comando:
+
+javadoc -d doc *.java
+
+Este proceso generará automáticamente una carpeta llamada doc. Para consultar la documentación, simplemente abre el archivo de índice en tu navegador de preferencia. Desde la terminal puedes lanzarlo directamente con:
+
+xdg-open doc/index.html
 
 ### 3. Archivos
 
@@ -48,7 +63,6 @@ Se presentan carpetas la cuales contienen los archivos correspondientes a cada e
 - EloTelTagView.java
 - Equipo.java
 - ETNube.java
-- RadarPing.java
 - Tablet.java
 - TabletView.java
 - Territory.java
@@ -65,7 +79,6 @@ Se presentan carpetas la cuales contienen los archivos correspondientes a cada e
 - EloTelTagView.java
 - Equipo.java
 - ETNube.java
-- RadarPing.java
 - Tablet.java
 - TabletView.java
 - Territory.java

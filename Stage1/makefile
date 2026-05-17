@@ -8,3 +8,6 @@ run:
 
 clean:
 	rm -f *.class
+
+doc:
+	javadoc -d doc $(JFLAGS) *.java

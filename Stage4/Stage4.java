@@ -30,7 +30,7 @@ public class Stage4 extends Application {
     @Override
     public void start(Stage primaryStage) {
         Scanner configFile = openConfig(primaryStage);
-	radarSound = new AudioClip(new File("Sonar_sound.mp3").toURI().toString());
+	radarSound = new AudioClip(new File("ping.wav").toURI().toString());
         nube = new ETNube();
         territory = new Territory();
         String imageName = configDir.getAbsolutePath() + File.separator + configFile.next();

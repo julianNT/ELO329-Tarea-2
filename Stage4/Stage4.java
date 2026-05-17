@@ -8,6 +8,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.util.Duration;
+import javafx.scene.media.AudioClip;
+import java.io.File;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,10 +25,12 @@ public class Stage4 extends Application {
     private int contador = 0;
 
     private File configDir;
+	private AudioClip radarSound;
 
     @Override
     public void start(Stage primaryStage) {
         Scanner configFile = openConfig(primaryStage);
+	radarSound = new AudioClip(new File("Sonar_sound.mp3").toURI().toString());
         nube = new ETNube();
         territory = new Territory();
         String imageName = configDir.getAbsolutePath() + File.separator + configFile.next();
@@ -167,6 +171,7 @@ public class Stage4 extends Application {
 
     public void spawnRadar(double x, double y) {
         if (pane == null) return;
+	radarSound.play();
         Circle c = new Circle(x, y, 5);
         c.setStroke(Color.LIMEGREEN);
         c.setFill(null);

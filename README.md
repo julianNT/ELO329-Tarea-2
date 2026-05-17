@@ -7,28 +7,68 @@ Se simula graficamente la interacción entre dispositivos EloTelTags, celulares 
 
 ### 1. Compilación y ejecución
 
+### 2. Generar documentación con Javadoc
 
-### 2. Archivos
+### 3. Archivos
 
 Se presentan carpetas la cuales contienen los archivos correspondientes a cada etapa:
-Stage1:
 
-- T2Stage1.java
+#### Stage1:
+
+- Stage1.java: inicializa la interfaz gráfica y carga la configuración desde config.txt
 - Celullar.java
 - CelullarView.java
 - Equipo.java
 - Territory.java
 - TerritoryView.java
 - config.txt: archivo de entrada
+- Placeres.jpg: imagen del mapa
 
-Stage2:
+#### Stage2:
 
-- Stage2.java
+- Stage2.java: ejecuta una animación interactiva de los equipos en la simulación y añade controles de reproducción
+- Celullar.java
+- CelullarView.java
 - EloTelTag.java
 - EloTelTagView.java
-- Territory.java
 - Equipo.java
 - Tablet.java
-- TabletView.java- Territory.java
+- TabletView.java
+- Territory.java
 - TerritoryView.java
 - config.txt: archivo de entrada
+- Placeres.jpg: imagen del mapa
+
+#### Stage3: 
+
+- Stage3.java: integra ETNube y añade animaciones para actualizar posiciones en la consola
+- Celullar.java
+- CelullarView.java
+- EloTelTag.java
+- EloTelTagView.java
+- Equipo.java
+- ETNube.java
+- RadarPing.java
+- Tablet.java
+- TabletView.java
+- Territory.java
+- TerritoryView.java
+- config.txt: archivo de entrada
+- Placeres.jpg: imagen del mapa
+
+#### Stage4:
+
+- Stage4.java: integra todas las etapas anteriores
+- Celullar.java
+- CelullarView.java
+- EloTelTag.java
+- EloTelTagView.java
+- Equipo.java
+- ETNube.java
+- RadarPing.java
+- Tablet.java
+- TabletView.java
+- Territory.java
+- TerritoryView.java
+- config.txt: archivo de entrada
+- Placeres.jpg: imagen del mapa
